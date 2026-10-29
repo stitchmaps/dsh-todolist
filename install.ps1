@@ -1,9 +1,10 @@
-# Install the local "todolist" plugin into the running DSH desktop profile.
+# Install the "todolist" plugin into the running DSH desktop profile.
 #
-#   pwsh -File .\install-todolist.ps1
+#   pwsh -File .\install.ps1
 #
-# It copies packages/todolist into the profile's node_modules, records a file:
-# dependency, and appends a loader row to the profile's cordis.patch.yml.
+# It copies this repository's plugin files (package.json, lib/, ...) into the
+# profile's node_modules, records a file: dependency, and appends a loader row
+# to the profile's cordis.patch.yml.
 # Every modified file is backed up next to the original with a timestamp.
 
 param(
@@ -14,8 +15,8 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$source = Join-Path $repoRoot 'packages\todolist'
-if (-not (Test-Path $source)) { throw "plugin source not found: $source" }
+$source = $repoRoot
+if (-not (Test-Path (Join-Path $source 'package.json'))) { throw "plugin source not found: $source" }
 if (-not (Test-Path $Profile)) { throw "profile not found: $Profile" }
 
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
@@ -59,7 +60,7 @@ if ($patch -match '(?m)^\s*name:\s*[''"]?todolist[''"]?\s*$') {
 } else {
   $block = @"
 
-# --- todolist plugin (added by install-todolist.ps1) ---
+# --- todolist plugin (added by install.ps1) ---
 - insert:
     - id: todolist
       name: todolist

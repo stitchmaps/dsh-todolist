@@ -27,12 +27,12 @@ A **DeepSeek Harness (DSH)** desktop plugin that adds a **To-do List** panel to 
 ```powershell
 git clone https://github.com/stitchmaps/dsh-todolist.git
 cd dsh-todolist
-pwsh -File .\install-todolist.ps1
+pwsh -File .\install.ps1
 ```
 
 The script:
 
-1. copies `packages/todolist` into `%DSH_HOME%\profiles\desktop\node_modules\todolist`;
+1. copies this repository's plugin files into `%DSH_HOME%\profiles\desktop\node_modules\todolist`;
 2. records a `file:` dependency in the profile `package.json`;
 3. appends a loader row to the profile `cordis.patch.yml`.
 
@@ -62,11 +62,11 @@ to `~/.dsh/profiles/desktop/cordis.patch.yml`.
 
 DSH plugins have two halves:
 
-- **Browser half** (`packages/todolist/lib/client.js`) is loaded by the DSH web module loader. It registers:
+- **Browser half** (`lib/client.js`) is loaded by the DSH web module loader. It registers:
   - `sidebar.panellist` — the sidebar entry (`id: todolist`);
   - the `main` keyed slot — the full panel.
   Session data comes from the slot runtime's `useWorkspaces()` / `useSessions()` hooks; jumping uses `ctx.get('uiWorkspace').openSession(sessionId)`.
-- **Host half** (`packages/todolist/lib/index.js`) is a plain Cordis plugin. It registers `POST /api/todolist/state` through `connection.fetch.register` and reads/writes `<DSH_HOME>/todolist/todos.json` atomically.
+- **Host half** (`lib/index.js`) is a plain Cordis plugin. It registers `POST /api/todolist/state` through `connection.fetch.register` and reads/writes `<DSH_HOME>/todolist/todos.json` atomically.
 
 The browser bundle is hand-written in the same lazy-CJS factory format as official UI plugins (`window.__ModuleLoader__.load({ id, factory })`), so **no build step is needed**.
 
@@ -74,14 +74,15 @@ The browser bundle is hand-written in the same lazy-CJS factory format as offici
 
 ```
 .
-├─ packages/todolist/
-│  ├─ package.json          # main = host half, ./client = browser half, dsh.client
-│  ├─ cordis.patch.yml      # bundle patch: inserts the plugin row
-│  ├─ icon.svg
-│  └─ lib/
-│     ├─ index.js           # host half: persistence + POST /api/todolist/state
-│     └─ client.js          # browser half: sidebar entry + main panel
-├─ install-todolist.ps1
+├─ package.json             # main = host half, ./client = browser half, dsh.client
+├─ cordis.patch.yml         # bundle patch: inserts the plugin row
+├─ icon.svg
+├─ lib/
+│  ├─ index.js              # host half: persistence + POST /api/todolist/state
+│  └─ client.js             # browser half: sidebar entry + main panel
+├─ install.ps1
+├─ README.md / README.zh.md
+├─ LICENSE
 └─ docs/panel.png
 ```
 

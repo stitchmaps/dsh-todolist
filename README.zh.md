@@ -27,12 +27,12 @@
 ```powershell
 git clone https://github.com/stitchmaps/dsh-todolist.git
 cd dsh-todolist
-pwsh -File .\install-todolist.ps1
+pwsh -File .\install.ps1
 ```
 
 脚本会：
 
-1. 把 `packages/todolist` 复制到 `%DSH_HOME%\profiles\desktop\node_modules\todolist`；
+1. 把本仓库的插件文件复制到 `%DSH_HOME%\profiles\desktop\node_modules\todolist`；
 2. 在 profile 的 `package.json` 里登记 `file:` 依赖；
 3. 在 profile 的 `cordis.patch.yml` 末尾追加插件加载行。
 
@@ -60,11 +60,11 @@ pwsh -File .\install-todolist.ps1
 
 DSH 插件分为两侧：
 
-- **浏览器半侧**（`packages/todolist/lib/client.js`）由 DSH 的 Web 模块加载器加载，注册：
+- **浏览器半侧**（`lib/client.js`）由 DSH 的 Web 模块加载器加载，注册：
   - `sidebar.panellist` —— 左侧导航入口（`id: todolist`）；
   - `main` keyed 槽位 —— 主面板。
   工作区/会话数据来自槽位运行时注入的 `useWorkspaces()` / `useSessions()`；跳转会话调用 `ctx.get('uiWorkspace').openSession(sessionId)`。
-- **宿主半侧**（`packages/todolist/lib/index.js`）是普通 Cordis 插件。它通过 `connection.fetch.register` 注册 `POST /api/todolist/state`，并以原子方式读写 `<DSH_HOME>/todolist/todos.json`。
+- **宿主半侧**（`lib/index.js`）是普通 Cordis 插件。它通过 `connection.fetch.register` 注册 `POST /api/todolist/state`，并以原子方式读写 `<DSH_HOME>/todolist/todos.json`。
 
 浏览器产物采用与官方 UI 插件一致的惰性 CJS 工厂格式（`window.__ModuleLoader__.load({ id, factory })`）手写，因此**无需构建步骤**。
 
@@ -72,14 +72,15 @@ DSH 插件分为两侧：
 
 ```
 .
-├─ packages/todolist/
-│  ├─ package.json          # main = 宿主半侧，./client = 浏览器半侧，dsh.client
-│  ├─ cordis.patch.yml      # bundle 补丁：插入插件行
-│  ├─ icon.svg
-│  └─ lib/
-│     ├─ index.js           # 宿主半侧：持久化 + POST /api/todolist/state
-│     └─ client.js          # 浏览器半侧：侧边栏入口 + 主面板
-├─ install-todolist.ps1
+├─ package.json             # main = 宿主半侧，./client = 浏览器半侧，dsh.client
+├─ cordis.patch.yml         # bundle 补丁：插入插件行
+├─ icon.svg
+├─ lib/
+│  ├─ index.js              # 宿主半侧：持久化 + POST /api/todolist/state
+│  └─ client.js             # 浏览器半侧：侧边栏入口 + 主面板
+├─ install.ps1
+├─ README.md / README.zh.md
+├─ LICENSE
 └─ docs/panel.png
 ```
 
