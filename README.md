@@ -15,7 +15,7 @@ A **DeepSeek Harness (DSH)** desktop plugin that adds a **To-do List** panel to 
 - **DingTalk reminders** — a global default lead time plus a per-task override (0 = off); pushes N hours before the due time through a DingTalk **group robot webhook** or an **enterprise-app work notice**. DSH must be running (tray) for the scheduler.
 - **Workspace-session binding** — bind a task to any session grouped by workspace; a clickable chip jumps straight to that session.
 - **Collapsible sections** — “To do” and “Completed” sections can be collapsed, with counts.
-- **Persistent** — tasks are stored on the host at `<DSH_HOME>/todolist/todos.json`, so they survive app restarts and are independent of the random web port.
+- **Persistent** — tasks are stored on the host at `<DSH_HOME>/todolist/todos.json`, so they survive app restarts and are independent of the random web port. Every write keeps `todos.json.bak` plus up to 20 timestamped snapshots under `todolist/backups/`.
 - **Bilingual** — built-in Chinese / English UI strings.
 
 ## Requirements
@@ -106,6 +106,7 @@ The browser bundle is hand-written in the same lazy-CJS factory format as offici
 - The screenshot uses sample data.
 - This is a UI plugin: it does not register any model-facing tool or prompt content.
 - The data model is `{ version: 2, tasks: [{ id, title, done, due: 'YYYY-MM-DDTHH:00' | null, remindHours: number | null, remindedAt, reminderDue, sessionId, sessionTitle, createdAt, updatedAt }], config: { dingtalk: {...}, defaultRemindHours } }`.
+- Backups: `<DSH_HOME>/todolist/todos.json.bak` (previous version) and `<DSH_HOME>/todolist/backups/todos-YYYYMMDD-HHmmss.json` (last 20 writes). If the main file is missing or corrupt, the host falls back to the newest backup on read.
 
 ## License
 

@@ -15,7 +15,7 @@
 - **钉钉提醒**：全局默认提前小时数 + 每任务单独覆盖（0 = 不提醒）；到达「截止前 N 小时」时通过**钉钉群机器人 Webhook** 或**钉钉工作通知（企业应用）**推送。需要 DSH 处于运行/托盘状态（内置调度器每 60 秒检查一次）。
 - **绑定工作区会话**：按工作区分组选择会话，绑定后点击会话胶囊即可跳转到该会话。
 - **可折叠分组**：「待办」「已完成」两段均可收起，并显示数量。
-- **持久化**：任务存于宿主端 `<DSH_HOME>/todolist/todos.json`，重启不丢，且不受 Web 端口随机变化影响。
+- **持久化**：任务存于宿主端 `<DSH_HOME>/todolist/todos.json`，重启不丢，且不受 Web 端口随机变化影响。每次写入都会保留 `todos.json.bak`，并在 `todolist/backups/` 下保留最多 20 份带时间戳快照。
 - **中英双语**：内置中文 / 英文 UI 文案。
 
 ## 环境要求
@@ -104,6 +104,7 @@ DSH 插件分为两侧：
 - 截图使用示例数据。
 - 这是纯 UI 插件：不注册任何面向模型的工具或提示词内容。
 - 数据模型为 `{ version: 2, tasks: [{ id, title, done, due: 'YYYY-MM-DDTHH:00' | null, remindHours: number | null, remindedAt, reminderDue, sessionId, sessionTitle, createdAt, updatedAt }], config: { dingtalk: {...}, defaultRemindHours } }`。
+- 备份：`<DSH_HOME>/todolist/todos.json.bak`（上一版）和 `<DSH_HOME>/todolist/backups/todos-YYYYMMDD-HHmmss.json`（最近 20 次写入）。主文件缺失或损坏时，宿主读取会自动回退到最新备份。
 
 ## 许可证
 
