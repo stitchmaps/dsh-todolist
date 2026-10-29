@@ -1,7 +1,7 @@
 {
   "name": "todolist",
-  "version": "0.1.0",
-  "description": "DeepSeek Harness 待办清单插件：左侧导航面板 + 可折叠任务列表，支持新增/编辑/删除任务，绑定工作区会话并一键跳转。",
+  "version": "0.2.0",
+  "description": "DeepSeek Harness 待办清单插件：可折叠大卡片任务、截止时间（精确到小时）、按截止前 N 小时通过钉钉群机器人/工作通知推送提醒，并支持绑定工作区会话跳转。",
   "icon": "icon.svg",
   "author": "gary",
   "type": "module",
@@ -20,7 +20,8 @@
     "lib/client.js",
     "lib/index.js",
     "cordis.patch.yml",
-    "README.md"
+    "README.md",
+    "README.zh.md"
   ],
   "dsh": {
     "bundle": {
@@ -50,6 +51,8 @@
     "todolist",
     "todo",
     "task",
+    "dingtalk",
+    "reminder",
     "ui"
   ],
   "license": "MIT"
